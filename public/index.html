@@ -1,0 +1,6 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LLM Evaluation Analytics</title>
+<style>body{font-family:system-ui;margin:40px;max-width:1100px}button{padding:10px 16px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{border:1px solid #ddd;padding:16px;border-radius:8px}pre{background:#f4f4f4;padding:16px;overflow:auto}</style></head>
+<body><h1>LLM Evaluation & Accuracy Analytics</h1><p>Run a local evaluation and inspect statistical metrics.</p><button id="run">Run 200-response evaluation</button><div class="grid" id="cards"></div><h2>Raw result</h2><pre id="out">Waiting...</pre>
+<script>
+document.querySelector("#run").onclick=async()=>{const r=await fetch("/api/evaluations/run",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({count:200})});const d=await r.json(),s=d.summary;document.querySelector("#cards").innerHTML=["accuracy","precision","recall","f1"].map(k=>`<div class="card"><b>${k}</b><br>${(s[k]*100).toFixed(2)}%</div>`).join("");document.querySelector("#out").textContent=JSON.stringify(d,null,2)};
+</script></body></html>

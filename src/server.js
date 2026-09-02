@@ -1,0 +1,14 @@
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import {createRoutes} from "./routes.js";
+import {createRepository} from "./repository.js";
+dotenv.config();
+const app=express();
+app.use(cors()); app.use(express.json()); app.use(express.static("public"));
+const repository=createRepository(process.env.MONGO_URI);
+app.use("/api",createRoutes(repository));
+app.get("/health",(_req,res)=>res.json({status:"ok",service:"llm-evaluation-platform"}));
+const port=Number(process.env.PORT||3000);
+if(process.env.NODE_ENV!=="test") app.listen(port,()=>console.log(`Listening on :${port}`));
+export default app;
